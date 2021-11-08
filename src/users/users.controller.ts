@@ -29,9 +29,9 @@ export class UsersController {
     };
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const data = await this.usersService.findOne(+id);
+  @Get(':username')
+  async findOne(@Param('username') username: string) {
+    const data = await this.usersService.findOne(username);
     return {
       message: 'Petition accepted',
       data,
