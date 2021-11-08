@@ -1,6 +1,11 @@
 import { UserDto } from './dto/user.dto';
 import { LoginUserDto } from './dto/user-login.dto';
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,9 +22,8 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<UserDto> {
     const { username } = createUserDto;
 
-    if (this.findByUsername(username)) {
-      throw new HttpException('User already exists', 409);
-    }
+    const userIdDb = this.findByUsername(username);
+    if (userIdDb) throw new ConflictException('User already exists');
 
     const user = this.usersRepository.create(createUserDto);
     return await this.usersRepository.save(user);
@@ -35,11 +39,10 @@ export class UsersService {
 
   async findByLogin({ username, password }: LoginUserDto): Promise<UserDto> {
     const user = await this.findByUsername(username);
-
-    if (!user) throw new HttpException('User not found', 404);
+    if (!user) throw new NotFoundException("User doesn't exist!");
 
     if (user.password !== password) {
-      throw new HttpException('Invalid credentials', 401);
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     return user;

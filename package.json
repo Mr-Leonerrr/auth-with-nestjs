@@ -1,13 +1,13 @@
 {
   "name": "auth-nestjs",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "",
   "author": {
     "name": "Leonardo Natera",
     "email": "lnatera@cuc.edu.co"
   },
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
